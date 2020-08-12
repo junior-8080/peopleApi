@@ -91,9 +91,11 @@ const sigininParam = [
     check('password').notEmpty().withMessage("provide a password"),
     check('useremail').custom(value => {
         return userService.findEmail(value).then(email =>{
-            if(email[0].user_email !== value){
-                return Promise.reject('inavlid email or password')
-            }
+            if(email.length > 0){
+                if(email[0].user_email !== value || email){
+                    return Promise.reject('inavlid email or password')
+                }
+            } 
         })
         .catch(err => console.log(err))
     })

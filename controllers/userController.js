@@ -28,6 +28,11 @@ function signin(req, res) {
     let password = req.body.password;
     userService.fetchUser(req.body.useremail)
         .then(result => {
+            if(result === undefined){
+                return res.status(422).json({
+                    errors: [{msg:"invalid email or password"}]
+                })
+            }
             passwordController.comparePassword(password, result.user_password)
                 .then(compare => {
                     let payload = {

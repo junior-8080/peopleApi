@@ -123,6 +123,7 @@ function addPerson(req, res) {
 // update person.
 function updatePerson(req, res) {
   let data = req.body;
+  console.log(data)
   peopleService.updatePerson(data)
     .then(result => {
       if (result !== 'failed') {

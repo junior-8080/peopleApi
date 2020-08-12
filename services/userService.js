@@ -94,8 +94,8 @@ function findEmail(data) {
             .then(client => {
                 return client.query(query, value)
                     .then(res => {
+                        console.log(res.rows)
                         if (res.rows) {
-                            // console.log(res.rows)
                             resolve(res.rows)
                         } else {
                             reject("failed")
@@ -145,7 +145,6 @@ function fetchUser(data) {
                 return client.query(query, value)
                     .then(res => {
                         if (res.rows) {
-                            // console.log(res.rows)
                             resolve(res.rows[0])
                         } else {
                             reject("failed")
