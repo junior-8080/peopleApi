@@ -8,7 +8,6 @@ function verifyToken(token) {
       if (err) {
         reject(err)
       } else {
-        console.log('hi',decoded)
         resolve(decoded)
       }
     })

@@ -94,6 +94,7 @@ function addToAccountPerson(data){
                         }
                     })
             })
+            .catch(err => console.log(err))
 
     })
 }

@@ -10,8 +10,9 @@ const app = express();
 const port = 3001;
 
 const user = require('./routes/userRoute');
-const people = require('./routes/peopleRoute')
-const message = require('./routes/messageRoute')
+const people = require('./routes/peopleRoute');
+const message = require('./routes/messageRoute');
+const resetPassword = require('./routes/resetPassword');
 
 
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(cookieParser())
 app.use('/api', user);
 app.use('/api', people);
 app.use('/api',message);
+app.use('/api',resetPassword);
 
 
 app.listen(port, () => console.log(`app is running on port ${port}`));
