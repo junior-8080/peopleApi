@@ -25,7 +25,7 @@ function comparePassword(password,hash) {
                    resolve(result)
                 }
                 else{
-                    console.log('hi')
+                    // console.log('hi')
                     reject({name:"error password"})
                 }
             })

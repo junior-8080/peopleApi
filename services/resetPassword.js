@@ -9,7 +9,7 @@ function saveReset(data) {
         pool.
         connect()
             .then(client => {
-                console.log(client)
+                // console.log(client)
                 client.query(query, values)
                     .then(result => {
                         if (result.rows) {

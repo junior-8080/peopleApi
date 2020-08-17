@@ -17,8 +17,8 @@ let transporter = nodemailer.createTransport({
     //     pass: process.env.PASSWORD, // generated ethereal password
     // },
     auth: {
-        user: '',
-        pass: ''
+        user: 'willow.turcotte34@ethereal.email',
+        pass: 'EZ6RAgrUhwejE1fc4k'
     },
 });
 
@@ -31,7 +31,7 @@ function resetPassword(req, res) {
         type: 'url-safe'
     });
 
-    console.log(secret)
+    // console.log(secret)
     const data = {
         email: email,
         secret: secret
@@ -67,7 +67,7 @@ function sendEmail(secret) {
         from: process.env.USER,
         to: 'abdulmukhsin@gmail.com',
         subject: 'Reset Password',
-        html: `<a href="http://localhost:3001/api/reset/${secret}</a>`
+        html: `<a href="http://localhost:3001/api/reset/${secret}">Click here</a>`
     }
 
     return transporter.sendMail(message)

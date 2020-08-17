@@ -4,7 +4,7 @@ let password = 'Qwerty123';
 
 
 function sendMessage(req,res){
-    console.log(req.body)
+    // console.log(req.body)
     let postData = JSON.stringify({
         'to' : req.body.recepient,
         'body': req.body.message
@@ -28,14 +28,14 @@ function sendMessage(req,res){
           data += chunk;
         });
         resp.on('end', () => {
-          console.log("Response:", data);
+          // console.log("Response:", data);
            data = JSON.parse(data)
            res.json({
                data
            })
         });
       });
-      console.log(req)
+      // console.log(req)
       
       req.on('error', (e) => {
         console.error(e);

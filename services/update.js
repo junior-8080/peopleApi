@@ -58,7 +58,7 @@ function findEmail(data) {
                 return client.query(query, value)
                     .then(res => {
                         if (res.rows) {
-                            console.log(res.rows)
+                            // console.log(res.rows)
                             resolve(res.rows)
                         } else {
                             reject("failed")

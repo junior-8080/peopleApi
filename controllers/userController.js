@@ -8,7 +8,7 @@ const peopleService = require('../controllers/peopleController')
 
 function signup(req, res) {
     let data = req.body
-    console.log(data)
+    // console.log(data)
     data.useremail = data.useremail.toLowerCase()
     passwordController.hashPassword(data.password).then(hash => {
             data.password = hash;
