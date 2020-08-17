@@ -1,6 +1,8 @@
-const userServive = require('../services/userService');
+const userService = require('../services/userService');
 const cryptoRandomString = require('crypto-random-string');
+const resetService = require('../services/resetPassword');
 const nodemailer = require('nodemailer');
+const passwordController = require('../utils/password');
 require('dotenv').config();
 
 
@@ -15,8 +17,8 @@ let transporter = nodemailer.createTransport({
     //     pass: process.env.PASSWORD, // generated ethereal password
     // },
     auth: {
-        user: 'willow.turcotte34@ethereal.email',
-        pass: 'EZ6RAgrUhwejE1fc4k'
+        user: '',
+        pass: ''
     },
 });
 
@@ -24,59 +26,87 @@ let transporter = nodemailer.createTransport({
 
 function resetPassword(req, res) {
     const email = req.body.email;
-    console.log(email);
-    userServive.fetchUser(email).then((result) => {
-        if (result === undefined) {
-            return res.status(422).json({
-                errors: [{
-                    msg: "email doest not exit"
-                }]
-            })
-        }
-        sendEmail()
-            .then(messageId => {
-                console.log('<<<<')
-                console.log(messageId)
-                if (result.accepted) {
-                    console.log('//')
-                    return res.json({
-                        msg: "reset"
-                    })
-                }
-
-            })
-            .catch(err => console.log(err))
-
-    })
-}
-
-
-function sendEmail() {
-    const param = cryptoRandomString({
+    const secret = cryptoRandomString({
         length: 15,
         type: 'url-safe'
     });
 
+    console.log(secret)
+    const data = {
+        email: email,
+        secret: secret
+    }
+    userService.fetchUser(email).then((result) => {
+            if (result === undefined) {
+                return res.status(422).json({
+                    errors: [{
+                        msg: "email doest not exit"
+                    }]
+                })
+            }
+            sendEmail(secret).then(info => {
+                if (info.accepted) {
+                    resetService.saveReset(data)
+                        .then(result => {
+                            if (result[0].reset_id) {
+                               return res.json({
+                                    message: 'reset'
+                                })
+                            }
+                        })
+                }
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+
+function sendEmail(secret) {
+
     let message = {
         from: process.env.USER,
         to: 'abdulmukhsin@gmail.com',
-        subject: '<h3>Reset Password</h3>',
-        html: `<a href="http://localhost:3001/api/reset/${param}</a>`
+        subject: 'Reset Password',
+        html: `<a href="http://localhost:3001/api/reset/${secret}</a>`
     }
 
-    return new Promise((reject, resolve) => {
+    return transporter.sendMail(message)
 
-        transporter.sendMail(message, (err, info) => {
-            if (err) {
-                return reject(err)
+}
+
+
+
+function reset(req, res) {
+    let data = req.body;
+    resetService.fetchSecretString(data.secret).then(result => {
+
+            if (result === undefined) {
+                return res.json({
+                    message: 'cannot reset password'
+                })
             }
-            resolve();
+            passwordController.hashPassword(data.password)
+                .then(password => {
+                    data.email = result.email;
+                    data.password = password
+                    userService.updatePassword(data)
+                        .then(result => {
+                            console.log(result.user_id)
+                            if (result) {
+                                res.json({
+                                    message: 'password reset'
+                                })
+                            }
+                        })
+                })
+
+
         })
+        .catch(err => console.log(err));
 
-
-    })
 }
 
 module.exports = {
-    resetPassword
+    resetPassword,
+    reset
 }

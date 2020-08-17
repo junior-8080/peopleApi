@@ -159,26 +159,44 @@ function fetchUser(data) {
     })
 }
 
-function updateProfile(data){
+function updateProfile(data) {
     let query = 'update account set user_name=$1,user_email=$2,msisdn=$3,updated=now() where user_id = 29'
-    let value = [data.username,data.useremail,data.msisdn]
-    return new Promise((resolve,reject)=>{
-        pool   
+    let value = [data.username, data.useremail, data.msisdn]
+    return new Promise((resolve, reject) => {
+        pool
             .connect()
-            .then(client =>{
-                    client.query(query,value)
-                        .then(res =>{
-                            if(res.rows){
-                                // console.log('service')
-                                // console.log(res)
-                                resolve(res.rows[0])
-                            }
-                            else{
-                                reject('failed')
-                            }
-                        })
-                        .catch(err=> console.log(err))
+            .then(client => {
+                client.query(query, value)
+                    .then(res => {
+                        if (res.rows) {
+                            resolve(res.rows[0])
+                        } else {
+                            reject('failed')
+                        }
+                    })
+                    .catch(err => console.log(err))
             })
+    })
+}
+
+function updatePassword(data) {
+    let query = `update account set user_password=$1,updated=now() where user_email =$2 returning user_id` ;
+    let value = [data.password, data.email]
+    return new Promise((resolve, reject) => {
+        pool
+            .connect()
+            .then(client => {
+                client.query(query, value)
+                    .then(res => {
+                        if (res.rows) {
+                            resolve(res.rows[0])
+                        } else {
+                            reject('failed')
+                        }
+                    })
+
+            })
+            .catch(err=> console.log(err))
     })
 }
 
@@ -191,5 +209,6 @@ module.exports = {
     findEmail,
     findPassword,
     fetchUser,
-    updateProfile
+    updateProfile,
+    updatePassword
 }
