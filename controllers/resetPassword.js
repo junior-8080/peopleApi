@@ -67,7 +67,7 @@ function sendEmail(secret) {
         from: process.env.USER,
         to: 'abdulmukhsin@gmail.com',
         subject: 'Reset Password',
-        html: `<a href="http://localhost:3001/api/reset/${secret}">Click here</a>`
+        html: `<a href="http://localhost:3000/reset/${secret}">Click here</a>`
     }
 
     return transporter.sendMail(message)
@@ -78,6 +78,7 @@ function sendEmail(secret) {
 
 function reset(req, res) {
     let data = req.body;
+    console.log(data)
     resetService.fetchSecretString(data.secret).then(result => {
 
             if (result === undefined) {

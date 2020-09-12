@@ -53,7 +53,7 @@ function signin(req, res) {
                                 console.log("///")
                                 return res.json({
                                     message: "success",
-                                    username: payload.username
+                                    data: payload
                                 })
                             })
                     }
